@@ -32,6 +32,7 @@ function setup() {
     // Change the frame rate as necessary depending on computer preformance
     frameRate(30)
     rectMode(CORNERS);
+    textFont(loadFont('fonts/playfulKoala.ttf'));
 }
 
 function draw() {
@@ -52,7 +53,7 @@ function draw() {
        rect(windowWidth, 0, windowWidth * 0.5, windowHeight * .5 ) 
        // Draw the prediction
         fill('rgb(22,146,70)');
-        textSize(72);
+        textSize(100);
         textAlign(CENTER);
         text(predictions[0].label, windowWidth * 0.75, windowHeight * 0.25);
         console.log(predictions)
