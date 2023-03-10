@@ -30,7 +30,7 @@ function setup() {
 function draw() {
 
     // Change the frame rate as necessary depending on computer preformance
-    frameRate(30)
+    frameRate(60)
     background('rgb(253,255,243)');
     // Draw the video
     image(flippedVideo, 0, 0);
@@ -64,6 +64,9 @@ function draw() {
 
     // ALT: Consider using ML5.js Handpose model to aid in the detection of hand gestures. There is also hand pose detection and finger pose detection. Finger pose allows for gesture recognition. 
 
+    // ALT: Consider training several different models and having the kids interact with them. For example, maybe have one model which is completley missing one of the classes,
+    // a model which was undertrained on a specific class, and another which was trained using full data. Students can then get an idea for the type of model they are interacting with
+    // depending on the performance
 
 
 }
