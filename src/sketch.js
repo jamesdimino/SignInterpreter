@@ -2,13 +2,14 @@
 let classifier;
 // Model URL
 let imageModelURL = 'https://teachablemachine.withgoogle.com/models/fwgU1vlIM/';
-
+const LETTER_NUM = 5;
 // Video
 let video;
 let flippedVideo;
 // To store the classification
 let label = "";
-// let angle = 0
+// let angle = 0;
+let predictions;
 
 // Load the model first
 function preload() {
@@ -16,31 +17,73 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(640, 240);
+    createCanvas(windowWidth, windowHeight);
+    
     // Create the video
     video = createCapture(VIDEO);
-    video.size(320, 240);
+    video.size(windowWidth/2, windowHeight/2);
     video.hide();
-
     flippedVideo = ml5.flipImage(video);
+  
     // Start classifying
     classifyVideo();
+   
+
+    // Change the frame rate as necessary depending on computer preformance
+    frameRate(30)
+    rectMode(CORNERS);
 }
 
 function draw() {
-
-    // Change the frame rate as necessary depending on computer preformance
-    frameRate(60)
+    // draw the background
     background('rgb(253,255,243)');
+
     // Draw the video
     image(flippedVideo, 0, 0);
 
-    // Draw the label
-    fill('rgb(22,146,70)');
-    textSize(72);
+    // Frame the video
+     noFill();
+    stroke(20);
+    rect(0, 0, windowWidth * 0.5, windowHeight * 0.5 ) 
+    // Draw the live statistics
+    if (predictions) {
+       // draw a box to hold the predictions
+       noFill();
+       rect(windowWidth, 0, windowWidth * 0.5, windowHeight * .5 ) 
+       // Draw the prediction
+        fill('rgb(22,146,70)');
+        textSize(72);
+        textAlign(CENTER);
+        text(predictions[0].label, windowWidth * 0.75, windowHeight * 0.25);
+        console.log(predictions)
+        for (let i = 0; i < LETTER_NUM; i++) {
 
-    textAlign(CENTER);
-    text(label, width * 0.75, height * 0.66);
+        // set up some quality easy of use variables
+        confidence = predictions[i].confidence;
+        maxBarHeight = 100;
+        barWidth = 45;
+        barGap = 50;
+        startingX = windowWidth * 0.625 + ((barGap + barWidth) * i);
+        startingY = windowHeight * 0.45;
+
+        // Interpolate from red to green using confidence
+        fill(lerpColor(color(255,0,0), color(0,255,0), confidence));
+
+        // Draw the rectangle
+        rect( startingX,
+              startingY - (confidence * maxBarHeight),
+              startingX + barWidth,
+              startingY, 
+              5, 5, 5, 5
+            )
+       
+        // Write the labels under their respective bars
+        fill(0,0,0);
+        textSize(30);
+        textAlign(CENTER);
+        text(predictions[i].label,startingX + barWidth / 2, startingY + 30);
+      }
+    }
 
     // TODO: Write out sentences with letters given a high
     // letter confidence over a given interval
@@ -88,7 +131,9 @@ function gotResult(error, results) {
     // The results are in an array ordered by confidence.
     // console.log(results[0]);
 
-    label = results[0].label;
+    predictions = results;
+    // console.log(results)
+    // top3["C"] = results[""]
     // Classifiy again!
     classifyVideo();
 }
