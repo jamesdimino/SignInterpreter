@@ -1,18 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/p5@latest/lib/p5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/p5@latest/lib/addons/p5.dom.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ml5@latest/dist/ml5.min.js"></script>
-    <script src="sketch.js"></script>
-    <!-- <script src="foo.js"> </script> -->
+    <h1> Welcome to AI for ASL! </h1>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    
+    <form action="game.html">
+        <label for="fname">First Name:</label>
+        <!-- make default text in the input element -->
+
+        <input type="text" id="fname" name="fname" placeholder="Type here" required>
+        <br><br>
+        <label for="cars">Grade Level: </label>
+        <select name="grade" id="grade"  required> 
+          <option value="" selected disabled hidden>Select grade here</option>
+          <option value="4th">4th</option> 
+          <option value="5th">5th</option>
+          <option value="6th">6th</option>
+          <option value="7th">7th</option>
+        </select>
+        <br><br><br>
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>

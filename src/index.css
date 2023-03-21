@@ -1,0 +1,98 @@
+@font-face {
+    font-family: playfulKoala;
+    src: url(fonts/playfulKoala.ttf);
+  }
+
+/* take the text in the head and make it large, center it, and give it a background color */
+h1 {
+    /* text-align: center; */
+    font-size: 6em;
+    /* background-color: #4CAF50; */
+    color: rgb(68, 68, 39);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 75%;
+    position: absolute;
+    top: 10%;
+    left: 66%;
+    transform: translate(-50%, -50%);
+    font-family: playfulKoala;
+    font: 6em playfulKoala;
+  }
+
+body {
+    background-color: rgb(253,255,243);
+    
+    font-family: playfulKoala;
+    font: 1em playfulKoala;
+  }
+  
+input[type="text"] {
+width: 50%;
+font-size: 0.5em;
+/* padding: 12px 20px; */
+/* box-sizing: border-box; */
+/* padding: 1em; */
+margin: 8px 0;
+box-sizing: border-box;
+}
+
+button{
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+/* generate css to center the form and its contents to the center of the page */
+form{
+    background-color: #f8f8f8;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 75%;
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    
+    
+    font-family: playfulKoala;
+    font: 6em playfulKoala;
+  }
+
+input[type=submit]{
+position: absolute;
+/* make the text bigger */
+/* font-size: 0.5em; */
+top: 75%;
+left: 25%;
+background-color: #4CAF50;
+color: white;
+padding: 12px 20px;
+border: none;
+border-radius: 4px;
+width: 50%;
+font-size: x-large;
+cursor: pointer;
+}
+
+  
+
+select{
+    /* align text within the select element */
+    text-align: center;
+    /* make the text larger */
+    font-size: 0.5em;
+    width: 50%;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+}
