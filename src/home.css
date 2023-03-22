@@ -1,0 +1,15 @@
+.container {
+    width:100%;
+}
+
+.center {
+    background-color:#f9f9f9;
+    text-align:center;
+}
+
+.center button {
+	border-radius: 25px;
+	font-size: 5rem;
+	padding: 2rem;
+	margin-top: 3rem;
+}

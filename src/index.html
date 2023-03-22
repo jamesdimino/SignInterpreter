@@ -1,25 +1,96 @@
 <html>
 <head>
-    <h1> Welcome to AI for ASL! </h1>
+    <title>ASL Interpreter</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <form action="game.html">
-        <label for="fname">First Name:</label>
-        <!-- make default text in the input element -->
+    <div>
+        <form action="home.html">
+            <label for="fname">First Name:</label>
+            <!-- make default text in the input element -->
 
-        <input type="text" id="fname" name="fname" placeholder="Type here" required>
-        <br><br>
-        <label for="cars">Grade Level: </label>
-        <select name="grade" id="grade"  required> 
-          <option value="" selected disabled hidden>Select grade here</option>
-          <option value="4th">4th</option> 
-          <option value="5th">5th</option>
-          <option value="6th">6th</option>
-          <option value="7th">7th</option>
-        </select>
-        <br><br><br>
-        <input type="submit" value="Submit">
-    </form>
+            <input type="text" id="fname" name="fname" placeholder="Type here" required>
+            <br><br>
+            <label for="cars">Grade Level: </label>
+            <select name="grade" id="grade"  required>
+              <option value="" selected disabled hidden>Select grade here</option>
+              <option value="3">3rd</option>
+              <option value="4">4th</option>
+              <option value="5">5th</option>
+              <option value="6">6th</option>
+              <option value="7">7th</option>
+              <option value="8">8th</option>
+            </select>
+            <br><br><br>
+            <input type="submit" value="Submit" onclick="addUser()">
+        </form>
+    </div>
 </body>
+
 </html>
+
+<script>
+    /**
+     * Add new users to locally stored JSON object
+    **/
+    function addUser() {
+        let userData = localStorage.getItem('userData');
+        let firstName = document.getElementById('fname').value;
+        let grade = document.getElementById('grade').value;
+        var date = new Date();
+        var formattedDate = date.getDate() + "/"
+            + (date.getMonth() + 1)  + "/"
+            + date.getFullYear() + " - "
+            + date.getHours() + ":"
+            + date.getMinutes() + ":"
+            + date.getSeconds();
+
+        if (userData) {
+            userData = JSON.parse(userData);
+        } else {
+            userData = {users: []};
+        }
+        userData.users.push({
+            firstName: firstName,
+            grade: grade,
+            date: date
+        });
+        localStorage.setItem('userData', JSON.stringify(userData));
+    }
+
+    /**
+     * Exports all users currently in localstorage
+     * Download file in csv format
+     *
+     * This function should only be ran in console
+    **/
+    function exportUsers() {
+        let userData = localStorage.getItem('userData');
+        if (userData) {
+            userData = JSON.parse(userData).users;
+            let csvRows = [];
+            const headers = ['ID', 'Name', 'Grade', 'Date/Time'];
+            csvRows.push(headers.join(','));
+            userData.forEach(function (user) {
+                let newRow = [
+                    csvRows.length,
+                    user.firstName,
+                    user.grade,
+                    user.date
+                ];
+
+                csvRows.push(newRow.join(','))
+            })
+            csvRows = csvRows.join('\n')
+            const blob = new Blob([csvRows], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.setAttribute('href', url)
+            a.setAttribute('download', 'users.csv');
+            a.click()
+            console.log('Users have been exported!')
+        } else {
+            console.log("No user data to export!");
+        }
+    }
+</script>
