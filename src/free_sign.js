@@ -22,7 +22,7 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth, windowHeight / 2);
 
     // Create the video
     video = createCapture(VIDEO);
@@ -35,7 +35,7 @@ function setup() {
 
 
     // Change the frame rate as necessary depending on computer preformance
-    frameRate(30)
+    frameRate(60)
     rectMode(CORNERS);
     textFont(loadFont('fonts/playfulKoala.ttf'));
 }
@@ -48,7 +48,7 @@ function draw() {
     image(flippedVideo, 0, 0);
 
     // Frame the video
-     noFill();
+    noFill();
     stroke(20);
     rect(0, 0, windowWidth * 0.5, windowHeight * 0.5 )
 
