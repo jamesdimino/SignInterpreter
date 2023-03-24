@@ -6,7 +6,7 @@ let video;
 let flippedVideo;
 
 let alphabet = ['a', 'b', 'c', 'd', 'e', 'f'];
-let gameLenth = 5;
+let gameLenth = 60;
 let guessLenth = 5;
 let gameTimer = 0;
 let charTimer = 0;
