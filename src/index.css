@@ -25,7 +25,7 @@
 body {
     background-color: rgb(253,255,243);
     font-family: playfulKoala;
-    font: 2em playfulKoala;
+    font: 1em playfulKoala;
   }
 
 input[type="text"] {
@@ -101,7 +101,7 @@ select{
 }
 
 .container {
-    width:100%; 
+    width:100%;
 }
 
 .center {
