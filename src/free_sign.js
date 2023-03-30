@@ -32,6 +32,7 @@ function setup() {
     flippedVideo = ml5.flipImage(video);
 
     // Start classifying
+    console.log("Classifying")
     classifyVideo();
 
 
@@ -39,6 +40,24 @@ function setup() {
     frameRate(60)
     rectMode(CORNERS);
     textFont(loadFont('fonts/playfulKoala.ttf'));
+
+    pauseBtn = createButton("Start");
+    pauseBtn.position(width * 0.63, height * 0.05);
+    pauseBtn.mousePressed(() => {
+        isPaused = !isPaused;
+        pauseBtn.html(isPaused ? 'Resume' : 'Pause');
+    });
+
+    clearBtn = createButton('Clear');
+    clearBtn.position(width * 0.75, height * 0.05);
+    clearBtn.mousePressed(() => {
+        word = "";
+        progress = 0;
+    });
+
+    deleteBtn = createButton('Delete');
+    deleteBtn.position(width * 0.85, height * 0.05);
+    deleteBtn.mousePressed(deleteChar);
 }
 
 function draw() {
@@ -54,17 +73,7 @@ function draw() {
     rect(0, 0, windowWidth * 0.5, windowHeight * 0.5 )
 
     // Draw Control Buttons
-    pauseBtn = createButton(isPaused ? 'Resume' : 'Pause');
-    pauseBtn.position(width * 0.63, height * 0.05);
-    pauseBtn.mousePressed(togglePaused);
-
-    clearBtn = createButton('Clear');
-    clearBtn.position(width * 0.75, height * 0.05);
-    clearBtn.mousePressed(clearWord);
-
-    deleteBtn = createButton('Delete');
-    deleteBtn.position(width * 0.85, height * 0.05);
-    deleteBtn.mousePressed(deleteChar);
+    
     // Draw the live statistics
     if (predictions) {
         // draw a box to hold the predictions
@@ -172,19 +181,13 @@ function highestOccurence(arr){
     ).pop();
 }
 
-function clearWord() {
-  word = "";
-  progress = 0;
-}
+
 
 function deleteChar() {
   word = word.slice(0, -1);
   progress = 0;
 }
 
-function togglePaused() {
-    isPaused = !isPaused;
-}
 
 // Will need to update with the new model links -> Currently all using the same model
 function getModel() {
