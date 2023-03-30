@@ -1,5 +1,5 @@
 let classifier;
-let imageModelURL = 'https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/';
+let imageModelURL;
 let confidenceArray = [];
 let framesPerChar = 45;
 let video;
@@ -23,6 +23,7 @@ let mainMenuBtn;
 let flushCall = true;
 
 function preload() {
+	getModel();
     classifier = ml5.imageClassifier(imageModelURL + 'model.json');
 }
 
@@ -163,3 +164,18 @@ function checkInput() {
 function goToMainMenu() {
 	location.href = "home.html"
 }
+
+// Will need to update with the new model links -> Currently all using the same model
+function getModel() {
+	let model = localStorage.getItem("modelType");
+	if (model == 1) {
+	  // Red
+	  imageModelURL = 'https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'
+	} else if (model == 2) {
+	  // Blue
+	  imageModelURL = 'https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'
+	} else if (model == 3) {
+	  // Green
+	  imageModelURL = 'https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'
+	}
+  }

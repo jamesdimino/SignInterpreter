@@ -1,7 +1,7 @@
 // Classifier Variable
 let classifier;
 // Model URL
-let imageModelURL = 'https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/';
+let imageModelURL;
 const LETTER_NUM = 5;
 let confidenceArray = [];
 let progress = 0;
@@ -18,6 +18,7 @@ let predictions;
 
 // Load the model first
 function preload() {
+    getModel();
     classifier = ml5.imageClassifier(imageModelURL + 'model.json');
 }
 
@@ -183,4 +184,19 @@ function deleteChar() {
 
 function togglePaused() {
     isPaused = !isPaused;
+}
+
+// Will need to update with the new model links -> Currently all using the same model
+function getModel() {
+  let model = localStorage.getItem("modelType");
+  if (model == 1) {
+    // Red
+    imageModelURL = 'https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'
+  } else if (model == 2) {
+    // Blue
+    imageModelURL = 'https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'
+  } else if (model == 3) {
+    // Green
+    imageModelURL = 'https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'
+  }
 }
