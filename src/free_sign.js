@@ -1,7 +1,7 @@
 // Classifier Variable
 let classifier;
 // Model URL
-let imageModelURL;
+let imageModelURL = "https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/";
 const LETTER_NUM = 5;
 let confidenceArray = [];
 let progress = 0;
@@ -27,7 +27,9 @@ function setup() {
 
     // Create the video
     video = createCapture(VIDEO);
-    video.size(windowWidth/2, windowHeight/2);
+
+    rect(0, 0, windowWidth/2, windowHeight/2)
+    video.size(windowWidth/2 - 15, windowHeight/2 - 15);
     video.hide();
     flippedVideo = ml5.flipImage(video);
 
@@ -35,9 +37,8 @@ function setup() {
     console.log("Classifying")
     classifyVideo();
 
-
     // Change the frame rate as necessary depending on computer preformance
-    frameRate(60)
+    frameRate(60);
     rectMode(CORNERS);
     textFont(loadFont('fonts/playfulKoala.ttf'));
 
@@ -45,6 +46,9 @@ function setup() {
     pauseBtn.position(width * 0.63, height * 0.05);
     pauseBtn.mousePressed(() => {
         isPaused = !isPaused;
+        if (!isPaused) {
+            loop();
+        }
         pauseBtn.html(isPaused ? 'Resume' : 'Pause');
     });
 
@@ -58,9 +62,20 @@ function setup() {
     deleteBtn = createButton('Delete');
     deleteBtn.position(width * 0.85, height * 0.05);
     deleteBtn.mousePressed(deleteChar);
+    
 }
 
 function draw() {
+    if (isPaused) {
+        background('rgb(253,255,243)');
+        textSize(60);
+        text("Video Paused", width * 0.20, height * 0.35);
+        noLoop();
+        return;
+    }
+    
+    classifyVideo();
+
     // draw the background
     background('rgb(253,255,243)');
 
@@ -70,7 +85,7 @@ function draw() {
     // Frame the video
     noFill();
     stroke(20);
-    rect(0, 0, windowWidth * 0.5, windowHeight * 0.5 )
+    rect(0, 0, windowWidth * 0.5 + 1, windowHeight * 0.5 )
 
     // Draw Control Buttons
     
@@ -112,33 +127,6 @@ function draw() {
       }
     }
 
-    // TODO: Write out sentences with letters given a high
-    // letter confidence over a given interval
-    // Possible Method: take the average confidence over every 10 frames and if it's above some threshold for some period of time, write the letter to the screen
-    // angle = up if threshold, back to zero if a new letter is being scanned in
-    // noFill();
-    // arc(width * 0.75, height * 0.66, 72, 72, 0, angle);
-
-    // TODO: Add a way to play different modes ( spelling words, signing the correct letter, etc)
-
-    // TODO: Impliment additional functionality to convey how the models learn from *data* and what are the implications of the data.
-
-    // TODO: Train an additional class on a blank background to have no letter appear. Current model will always predict some letter even if none is being signed.
-
-    // STRETCH GOAL: Display the confidence levels in real time using the data returned in the `results` variable
-
-    // STRETCH GOAL: Current model only supports A-F. Full static alphabet would be better, and full alphabet including dynamic letters would be best.
-
-
-    // STRETCH GOAL: Exercise may be more engaging for students if they can collaborate with one another. Further research into p5 party package required. Maybe have one student train the model and another student use it. Or give two students different models ( one trained well and the other not ) and have them try and spell words.
-
-    // ALT: Consider using ML5.js Handpose model to aid in the detection of hand gestures. There is also hand pose detection and finger pose detection. Finger pose allows for gesture recognition.
-
-    // ALT: Consider training several different models and having the kids interact with them. For example, maybe have one model which is completley missing one of the classes,
-    // a model which was undertrained on a specific class, and another which was trained using full data. Students can then get an idea for the type of model they are interacting with
-    // depending on the performance
-
-
 }
 
 // Get a prediction for the current video frame
@@ -170,8 +158,6 @@ function gotResult(error, results) {
         progress = 0;
       }
     }
-
-    classifyVideo();
 }
 
 function highestOccurence(arr){
