@@ -1,18 +1,17 @@
 <html>
 <head>
     <title>ASL Interpreter</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="output.css">
 </head>
-<body>
-    <div>
-        <form action="home.html">
-            <label for="fname">First Name:</label>
-            <!-- make default text in the input element -->
-
-            <input type="text" id="fname" name="fname" placeholder="Type here" required>
+<body class="font-[playfulKoala] bg-amber-50">
+    <p class="w-full text-center text-8xl mt-10 text-amber-500 bg-amber-200">Welcome To AI for ASL</p>
+    <div class="w-full content-center justify-center text-center">
+        <form class="left-[12.5%] bg-amber-100 top-1/4 w-4/5 absolute border-solid rounded-2xl border-cyan-100 bottom-16" id="home_form" action="free_sign.html" >
+            <label class="text-[6em]"for="fname">First Name:</label>
+            <input type="text" class="text-center text-[5em] w-1/2 text-5xl box-border rounded-md" id="fname" name="fname" placeholder="Type here" required>
             <br><br>
-            <label for="cars">Grade Level: </label>
-            <select name="grade" id="grade"  required>
+            <label class="text-[6em]" for="cars">Grade Level: </label>
+            <select class="text-center justify-center w-1/2 text-[5em]" name="grade" id="grade"  required>
                 <option value="" selected disabled hidden>Select grade here</option>
                 <option value="3">3rd</option>
                 <option value="4">4th</option>
@@ -22,7 +21,7 @@
                 <option value="8">8th</option>
             </select>
             <br><br><br>
-            <input type="submit" value="Submit" onclick="addUser()">
+            <input class="bg-[#4CAF50] text-white text-[2em] border-2 rounded-2xl w-1/2 p-4 translate-y-1/4 hover:bg-[#247527]" type="submit" value="Submit" onclick="addUser()">
         </form>
     </div>
 </body>
