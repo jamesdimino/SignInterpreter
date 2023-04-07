@@ -4,7 +4,7 @@ let classifier;
 let imageModelURL = "https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/";
 const letters = ['a', 'b', 'c', 'd', 'e', 'f','-']
 let upper_threshhold = 0.7
-let lower_threshhold = 0.1
+let lower_threshhold = 0.05
 let confidenceArray = {
     'a': [] ,
     'b': [], 
@@ -19,6 +19,7 @@ let isPaused = true;
 let framesPerChar = 10;
 // Video
 let video;
+let tutorial_counter = 1;
 let flippedVideo;
 // To store the classification
 let label = "";
@@ -31,7 +32,7 @@ const average = array => array.reduce((a, b) => a + b) / array.length;
 // Load the model first
 function preload() {
     // getModel();
-    classifier = ml5.imageClassifier('../models/1/' + 'model.json');
+    classifier = ml5.imageClassifier(imageModelURL + 'model.json');
 }
 
 function pause_play() {
@@ -40,17 +41,43 @@ function pause_play() {
     noLoop();
     isPaused = !isPaused;
     if (!isPaused) {
-        pauseBtn.html("Pause");
+        // pauseBtn.html("Pause");
         loop();
     } else {
-        pauseBtn.html("Play");
+        // pauseBtn.html("Play");
         noLoop();
     }
 }
 
+// used to control the movement from different tutorial phases
+function tutorialNext() {
+    console.log(tutorial_counter);
+    if (tutorial_counter == 1) {
+        document.getElementById("tutorialPrompt1").style.visibility = "hidden"; 
+        document.getElementById("tutorialPrompt2").style.visibility = "visible";
+        document.getElementById("videoHighlight").style.visibility = "visible";  
+    }
+    if (tutorial_counter == 2) {
+        document.getElementById("tutorialPrompt2").style.visibility = "hidden"; 
+        document.getElementById("videoHighlight").style.visibility = "hidden";
+        document.getElementById("tutorialPrompt3").style.visibility = "visible"; 
+        document.getElementById("statsHighlight").style.visibility = "visible";   
+    }
+    if (tutorial_counter == 3) {
+        document.getElementById("tutorialPrompt3").style.visibility = "hidden"; 
+        document.getElementById("statsHighlight").style.visibility = "hidden";  
+        document.getElementById("overlay").style.visibility = "hidden";
+        console.log("Tutorial done."); 
+        isPaused = false;
+       
+    }
+    tutorial_counter += 1;
+}
+
 function setup() {
+    
     createCanvas(windowWidth, windowHeight / 2);
-    background('rgb(255,244,17)')
+    background('rgb(255, 235, 145)')
     koalafont = loadFont("fonts/playfulKoala.otf");
     textFont(koalafont);
 
@@ -69,9 +96,16 @@ function setup() {
     frameRate(60);
     rectMode(CORNERS);
     // textFont(loadFont('fonts/playfulKoala.ttf'));
+    // uncomment this after testing
+
 }
 
 function draw() {
+    if (isPaused) {
+        return;
+    }
+
+    console.log("drawing");
     // draw the background
     background('rgb(255, 235, 145)');
 
@@ -154,17 +188,21 @@ function statistics() {
     // noFill();
     // rect(windowWidth, 0, windowWidth * 0.5, windowHeight * 0.5 )
     textAlign(CENTER);
-    textSize(120);
+    let top_character_size = 160;
+    textSize(top_character_size);
     
-    strokeWeight(2);
+    
+    text(top_character, width * 0.75, height * 0.33 + (top_character_size * 0.25));
+    strokeWeight(12);
     stroke(0, 0, 0);
-    text(top_character, width * 0.75, height * 0.25 + 15);
     if (progress) {
         noFill();
-        arc(width * 0.75, height * 0.25, 120, 120, 0, 2 * PI * (progress / 100.0))
+        stroke(lerpColor(color(255,0,0), color(0,255,0), (progress / 100.0)));
+        arc(width * 0.75, height * 0.33, top_character_size*  1.5, top_character_size * 1.5, 0, 2 * PI * (progress / 100.0))
         
     }
-    
+    strokeWeight(1);
+    stroke(0, 0, 0);
     // text(Math.round(progress) + '%', width * 0.75, height * 0.30);
 
     for (let i = 0; i < letters.length; i++) {
@@ -207,8 +245,11 @@ function statistics() {
     if (top_avg > upper_threshhold) {
         // model is confident for the top letter, increase progress
         progress += 2;
+    } else if (top_avg < lower_threshhold) {
+        // model is very unsure, lets decrease progress by 2
+        progress -= 2;
     } else {
-        // model is not confident, lets decrease the progress
+        // model has mid range confidence, decrease progress by 1
         progress -= 1;
     }
 

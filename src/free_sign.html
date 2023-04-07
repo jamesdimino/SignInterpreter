@@ -14,21 +14,11 @@
     <script src="free_sign.js"></script>
 </head>
 <body class="bg-[rgb(255,244,197)] border-2 border-amber-400">
-    <!-- class="absolute top-1/2" -->
-    <div class="absolute top-1/2" >
-        <p class="text-5xl">How to play:</p>
-        <div class="text-3xl p-5">
-        <p>
-            1. Stand on the X and hold your hand up to the camera. Only your hand and part of your arm should
-            be seen in the camera. Do not put your face in the camera.
-        </p>
-        <p>
-            2. When you are ready, press resume and you will be able to start signing. When the progress bar fills
-            the letter prediction will be displayed on the screen.
-        </p>
-        </div>
-			
-	
+    
+    <div class="absolute top-1/2 border-4 border-black flex" >
+        <p class="text-5xl flex-auto border border-black">Getting started</p>
+        <p class="text-5xl flex-auto"> this is a test</p>
+        
         
     
     <button onclick="location.href='index.html'" id="home_btn" type="button" class="ml-5 border-solid border-2 border-gray-600 text-black text-xl font bg-amber-100 hover:bg-amber-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center justify-end mr-2">
@@ -42,4 +32,31 @@
     </div>
 
 </body>
+<div class="visible bg-opacity-70 bg-black absolute left-0 top-0 h-full w-full text-center z-[1000px]" id="overlay">
+    
+
+    <div id="tutorialPrompt1" class="visible rounded-xl w-[40%] h-[40%] left-1/2 top-1/2 -mt-[10%] -ml-[20%] absolute bg-white border-4 border-solid border-black p-15 text-center">
+         <h1 class="text-[3em]">🤖 Welcome to free mode!</h1>
+         
+         <p class="text-[2em] mt-2 px-[1em]"> In this mode, you will get to make different ASL characters and have them predicted by an <strong>AI model</strong>. Once you are in a comfortable spot, 
+            click on the next button to learn more about the app.</p>
+         <button onclick="tutorialNext()" class="mt-6 w-1/2 right-0 text-[2em] bg-[rgb(76,175,80)] hover:bg-[#247527] text-white font-bold py-2 px-4 rounded-2xl">Next</button>
+    </div>
+
+    <div id="tutorialPrompt2" class="invisible rounded-xl w-[40%] h-[40%] left-1/2 ml-6 mt-6 absolute bg-white border-4 border-solid border-black p-15 text-center">
+        <h1 class="text-[3em]">Model input</h1>
+        <p class="text-[2em] mt-2 px-[1em]" > The area on the left is where a live video will be. This shows you what the computer can see while playing the game. 🤖📸</p>
+        <button onclick="tutorialNext()" class="mt-6 w-1/2 right-0 text-[2em] bg-[rgb(76,175,80)] hover:bg-[#247527] text-white font-bold py-2 px-4 rounded-2xl">Next</button>
+    </div>
+
+   <div id="tutorialPrompt3" class=" invisible rounded-xl w-[40%] h-[40%] absolute ml-[5%] mt-[2.5%] bg-white border-4 border-solid border-black p-15 text-center">
+        <h1 class="text-[3em]">Model output</h1>
+        <p class="text-[2em] mt-2 px-[1em]"> On the right is where the model prediction will be. This will include <strong>the letter</strong> being predicted and bars showing the models <strong>confidence</strong>. The more 🟩 green the bar, the more ✅confident the prediction.</p>
+        <button onclick="tutorialNext()" class="mt-6 w-1/2 right-0 text-[2em] bg-[rgb(76,175,80)] hover:bg-[#247527] text-white font-bold py-2 px-4 rounded-2xl">Start</button>
+    </div>
+
+    <div id="videoHighlight" class="invisible absolute w-1/2 h-1/2 text-center text-[5em] p-[2em] bg-amber-100">Video</div>
+    <div id="statsHighlight" class="invisible absolute w-1/2 h-1/2 left-1/2 bg-amber-100 text-center text-[5em] p-[2em]">Model Output</div>
+</div>
 </html>
+<!--  -->
