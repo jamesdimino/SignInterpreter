@@ -191,23 +191,27 @@ function statistics() {
     let top_character_size = 160;
     textSize(top_character_size);
     
-    
-    text(top_character, width * 0.75, height * 0.33 + (top_character_size * 0.25));
-    strokeWeight(12);
-    stroke(0, 0, 0);
-    if (progress) {
-        noFill();
-        stroke(lerpColor(color(255,0,0), color(0,255,0), (progress / 100.0)));
-        arc(width * 0.75, height * 0.33, top_character_size*  1.5, top_character_size * 1.5, 0, 2 * PI * (progress / 100.0))
-        
+    // only draw the character if the bg is not detected
+    if (top_character != '-') {
+        text(top_character, width * 0.75, height * 0.33 + (top_character_size * 0.25));
+        strokeWeight(12);
+        stroke(0, 0, 0);
+        if (progress) {
+            noFill();
+            stroke(lerpColor(color(255,0,0), color(0,255,0), (progress / 100.0)));
+            arc(width * 0.75, height * 0.33, top_character_size*  1.5, top_character_size * 1.5, 0, 2 * PI * (progress / 100.0))
+        }
+        strokeWeight(1);
+        stroke(0, 0, 0);
     }
-    strokeWeight(1);
-    stroke(0, 0, 0);
+    
     // text(Math.round(progress) + '%', width * 0.75, height * 0.30);
 
     for (let i = 0; i < letters.length; i++) {
-        // find the ith letter from the letters arr
+        
+        // draw the bar and letter if not background
         let entry = predictions.find(element => element.label === letters[i]);
+
     
         // set some vars for easy use later
         maxBarHeight = 100;
@@ -216,41 +220,48 @@ function statistics() {
         startingX = windowWidth * 0.625 + ((barGap + barWidth) * i);
         startingY = windowHeight * 0.45;
 
-        // Interpolate from red to green using confidence
-        fill(lerpColor(color(255,0,0), color(0,255,0), entry.confidence));
+        
 
-        // Draw the rectangle
-        rect(startingX,
-            startingY - (entry.confidence * maxBarHeight),
-            startingX + barWidth,
-            startingY,
-            5, 5, 5, 5
-        )
+        if (entry.label != '-') {
+            // Interpolate from red to green using confidence
+            fill(lerpColor(color(255,0,0), color(0,255,0), entry.confidence));
+            // Draw the rectangle
+            rect(startingX,
+                startingY - (entry.confidence * maxBarHeight),
+                startingX + barWidth,
+                startingY,
+                5, 5, 5, 5
+            )
+            // Write the labels under their respective bars
+            fill(0,0,0);
+            textSize(30);
+            textAlign(CENTER);
+            text(entry.label,startingX + barWidth / 2, startingY + 30);
+        }
+        
 
-        // Write the labels under their respective bars
-        fill(0,0,0);
-        textSize(30);
-        textAlign(CENTER);
-        text(entry.label,startingX + barWidth / 2, startingY + 30);
+        
 
-       // keep track of the past framesPerChar confidences
+        // keep track of the past framesPerChar confidences
         confidenceArray[letters[i]].push(entry.confidence)
         if (confidenceArray[letters[i]].length > framesPerChar) {
             confidenceArray[letters[i]].shift()
         }
     }
-
-    // is the top character average above or below the threshold?
-    let top_avg = average(confidenceArray[top_character]);
-    if (top_avg > upper_threshhold) {
-        // model is confident for the top letter, increase progress
-        progress += 2;
-    } else if (top_avg < lower_threshhold) {
-        // model is very unsure, lets decrease progress by 2
-        progress -= 2;
-    } else {
-        // model has mid range confidence, decrease progress by 1
-        progress -= 1;
+    // progress does not update for background, should always be zero
+    if (top_character != '-') {
+        // is the top character average above or below the threshold?
+        let top_avg = average(confidenceArray[top_character]);
+        if (top_avg > upper_threshhold) {
+            // model is confident for the top letter, increase progress
+            progress += 2;
+        } else if (top_avg < lower_threshhold) {
+            // model is very unsure, lets decrease progress by 2
+            progress -= 2;
+        } else {
+            // model has mid range confidence, decrease progress by 1
+            progress -= 1;
+        }
     }
 
     // has the progress reaches 100 (done) or 0 (choose a new letter)
@@ -264,11 +275,11 @@ function statistics() {
         let highest_avg = 0;
         // find char with highest avg ( excluding the background )
         for (letter in confidenceArray) {
-            if (average(confidenceArray[letter]) > highest_avg && letter != '-') {
+            // && letter != '-'
+            if (average(confidenceArray[letter]) > highest_avg ) {
                 highest_avg = average(confidenceArray[letter]);
                 top_character = letter;
             }
-            
         }
     }
 }
