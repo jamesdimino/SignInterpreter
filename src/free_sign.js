@@ -2,7 +2,7 @@
 let classifier;
 // Model URL
 let imageModelURL = "https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/";
-const letters = ['a', 'b', 'c', 'd', 'e', 'f','-']
+
 let upper_threshhold = 0.7
 let lower_threshhold = 0.05
 let confidenceArray = {
@@ -25,14 +25,22 @@ let flippedVideo;
 let label = "";
 // I'm just arbitrarilly setting the first character to 'a'
 let top_character = 'a';
-// let angle = 0;
+
 let predictions;
+// // set's of letters for each model 
+let springLetters = ['a', 'b', 'c', 'd', 'l', '-'];
+let winterLetters = ['d', 'e', 'f', 'g', 'i', '-'];
+const letters = ['a', 'b', 'c', 'd', 'e', 'f','-'];
+// let letters = springLetters;
+// this tracks where we are in the letters so the prompts cover them all
+let promptIndex = 0;
+let model;
+
 const average = array => array.reduce((a, b) => a + b) / array.length;
 
 // Load the model first
 function preload() {
-    // getModel();
-    classifier = ml5.imageClassifier(imageModelURL + 'model.json');
+    getModel();
 }
 
 function pause_play() {
@@ -52,26 +60,45 @@ function pause_play() {
 // used to control the movement from different tutorial phases
 function tutorialNext() {
     console.log(tutorial_counter);
-    if (tutorial_counter == 1) {
-        document.getElementById("tutorialPrompt1").style.visibility = "hidden"; 
-        document.getElementById("tutorialPrompt2").style.visibility = "visible";
-        document.getElementById("videoHighlight").style.visibility = "visible";  
+    switch(tutorial_counter) {
+        case 1:
+            document.getElementById("tutorialPrompt1").style.visibility = "hidden"; 
+            document.getElementById("tutorialPrompt2").style.visibility = "visible";
+            document.getElementById("videoHighlight").style.visibility = "visible";
+            tutorial_counter += 1;
+            break; 
+        case 2:
+            document.getElementById("tutorialPrompt2").style.visibility = "hidden"; 
+            document.getElementById("videoHighlight").style.visibility = "hidden";
+            document.getElementById("tutorialPrompt3").style.visibility = "visible"; 
+            document.getElementById("statsHighlight").style.visibility = "visible";
+            tutorial_counter += 1;
+            break; 
+        case 3:
+            document.getElementById("tutorialPrompt3").style.visibility = "hidden"; 
+            document.getElementById("statsHighlight").style.visibility = "hidden";  
+            document.getElementById("overlay").style.visibility = "hidden";
+            // console.log("DEBUGGING: SET IS PAUSED TO FALSE HERE WHEN DONE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            isPaused = false;
+            tutorial_counter += 1;
+            break;
+        
+        case 4:
+            // user has signed all the spring letters and needs to be shown the model select button
+            isPaused = true;
+            document.getElementById("overlay").style.visibility = "visible";
+            document.getElementById("overlay").style.opacity = "85%";
+            // make the background mostly opaque 
+            document.getElementById("modelSelectContainer").style.zIndex = "1";
+            document.getElementById("promptContainer").style.zIndex = "1";
+            document.getElementById("modelSelect").style.zIndex = "1";
+            document.getElementById("letterPrompt").innerHTML = "Let's try letters from another model!";
+            document.getElementById("letterPromptCaption").innerHTML = "Click";
+            document.getElementById("modelSelect").removeAttribute("disabled");
+            document.getElementById("modelSelect").style.opacity = "1";
+            // tutorial counter will increase when they click the winter model
+            break;
     }
-    if (tutorial_counter == 2) {
-        document.getElementById("tutorialPrompt2").style.visibility = "hidden"; 
-        document.getElementById("videoHighlight").style.visibility = "hidden";
-        document.getElementById("tutorialPrompt3").style.visibility = "visible"; 
-        document.getElementById("statsHighlight").style.visibility = "visible";   
-    }
-    if (tutorial_counter == 3) {
-        document.getElementById("tutorialPrompt3").style.visibility = "hidden"; 
-        document.getElementById("statsHighlight").style.visibility = "hidden";  
-        document.getElementById("overlay").style.visibility = "hidden";
-        console.log("Tutorial done."); 
-        isPaused = false;
-       
-    }
-    tutorial_counter += 1;
 }
 
 function setup() {
@@ -159,20 +186,17 @@ function deleteChar() {
   progress = 0;
 }
 
-// // Will need to update with the new model links -> Currently all using the same model
-// function getModel() {
-//   let model = localStorage.getItem("modelType");
-//   if (model == 1) {
-//     // Red
-//     imageModelURL = 'https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'
-//   } else if (model == 2) {
-//     // Blue
-//     imageModelURL = 'https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'
-//   } else if (model == 3) {
-//     // Green
-//     imageModelURL = 'https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'
-//   }
-// }
+// Will need to update with the new model links -> Currently all using the same model
+function getModel() {
+  model = document.getElementById("modelSelect").value;
+  if (model == 1) {
+    // spring
+    classifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'+ 'model.json');
+} else { 
+    // winter
+    classifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'+ 'model.json');
+  }
+}
 
 function tutorial() {
     console.log("Ran the tutorial.");
@@ -204,23 +228,17 @@ function statistics() {
         strokeWeight(1);
         stroke(0, 0, 0);
     }
-    
-    // text(Math.round(progress) + '%', width * 0.75, height * 0.30);
 
     for (let i = 0; i < letters.length; i++) {
-        
         // draw the bar and letter if not background
         let entry = predictions.find(element => element.label === letters[i]);
 
-    
         // set some vars for easy use later
         maxBarHeight = 100;
         barWidth = 45;
         barGap = 50;
         startingX = windowWidth * 0.625 + ((barGap + barWidth) * i);
         startingY = windowHeight * 0.45;
-
-        
 
         if (entry.label != '-') {
             // Interpolate from red to green using confidence
@@ -239,9 +257,6 @@ function statistics() {
             text(entry.label,startingX + barWidth / 2, startingY + 30);
         }
         
-
-        
-
         // keep track of the past framesPerChar confidences
         confidenceArray[letters[i]].push(entry.confidence)
         if (confidenceArray[letters[i]].length > framesPerChar) {
@@ -266,9 +281,7 @@ function statistics() {
 
     // has the progress reaches 100 (done) or 0 (choose a new letter)
     if (progress >= 100) {
-        // confirm the letter
-        console.log(`confirming letter ${top_character}`)
-        progress = 0;
+        confirmLetter();
     } else if (progress <= 0) {
         // if it is negative, set it to zero
         progress = 0;
@@ -282,4 +295,52 @@ function statistics() {
             }
         }
     }
+}
+
+function switchModel() {
+    // function activates when the user selects a model
+    let selector = document.getElementById("modelSelect")
+    // Am I waiting for them to click winter?
+    if (tutorial_counter == 4 && selector.value == "winter") {
+        // indicate that the user can proceed
+        tutorial_counter += 1;
+        // disable the button so they can't change it during this phase
+        document.getElementById("modelSelect").addAttribute("disabled");
+        document.getElementById("modelSelect").style.opacity = "0.5";
+        // unpause the game
+        isPaused = false;
+        // update the classifier
+        getModel();
+
+
+    }
+}
+function confirmLetter() {
+    // confirm the letter
+    console.log(`confirming letter ${top_character}`);
+    if (document.getElementById("modelSelect").value == "spring") {
+        if (top_character === springLetters[promptIndex]) {
+            // show the correct icon
+            
+            promptIndex += 1;
+            // -1 since the last character is the background
+            // entry needs to be there since it's classifiable and it used in the
+            // statistics function
+            if (promptIndex >= springLetters.length - 1) {
+                // all out of spring letters, tell user to switch to winter
+                tutorialNext();
+            } else {
+                document.getElementById("letterPrompt").innerHTML = `Can you sign a <strong>'${springLetters[promptIndex]}'</strong>?<br>`
+                
+            }
+        }
+    } else {
+        // user swapped to the
+        // if (top_character === winterLetters[promptIndex]) {
+        //     promptIndex += 1;
+        // }
+        
+    }
+    
+    progress = 0;
 }

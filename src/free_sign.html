@@ -15,49 +15,58 @@
 </head>
 <body class="bg-[rgb(255,244,197)] border-2 border-amber-400">
     
-    <div class="absolute top-1/2 border-4 border-black flex" >
-        <div class="flex-auto border border-black">
-            <p class="text-[5em]">Let's sign some letters!</p>
-            <p class="text-[5em]">Let's sign some letters!</p>
+    <div class="absolute top-1/2 flex mt-[2vw] w-full">
+        <div id="modelSelectContainer">
+            <h1 class="text-[10vw]">🤖</h1>
+            <select onchange="switchModel()" id="modelSelect" class=" p-[1vw] opacity-50 hover:bg-amber-300 bg-amber-200 h-[20%] text-[2vw] text-center justify-center ml-[2vw] rounded-3xl mb-[10%]" disabled>
+                <option value="spring" selected >Spring☀️</option>
+                <option value="winter">Winter❄️</option>
+            </select>
         </div>
-        <p class="text-5xl flex-auto"> this is a test</p>
-        
-        
-    
-    <button onclick="location.href='index.html'" id="home_btn" type="button" class="ml-5 border-solid border-2 border-gray-600 text-black text-xl font bg-amber-100 hover:bg-amber-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center justify-end mr-2">
-        <p>Main Menu</p><br>
-        <svg class="h-30 w-30 text-black"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="5 12 3 12 12 3 21 12 19 12" />  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
-        <!-- <svg aria-hidden="true" class="w-20 h-15" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg> -->
-        <span class="sr-only">Icon description</span>
-      </button>
+        <div id="promptContainer" class="border-[10px] border-solid border-white text-[5vw] bg-amber-50 mt-[3vw] center  text-center align-middle mr-[10vw] ml-[1vw] w-full mb-[3vw] rounded-3xl justify-items-center">
+            <p id="letterPrompt" class="ml-[2vw]">Can you sign a <strong>'a'</strong>?<br></p>
+            <p id="letterPromptCaption" class="text-[2vw] ml-[2vw]">Hint: Try moving your hand around the screen</p>
+            
+            <!-- <img class=" h-1/2 w-1/2 bg-[url(./static/asl.jpg)]"> -->
+        </div>
+       
+        <!-- <p class="text-[5vw] bg-amber-50 mt-[2vw] rounded-3xl">Speed Mode</p> -->
+        <div class=" w-1/4 center content-center">
+            <button onclick="location.href='speed_sign.html'" id="speed_btn" type="button" class="opacity-50 hover:bg-amber-300 bg-amber-200 h-[5vw] w-[10vw] mx-[20%] mt-[40%] center text-black text-xl  border-solid border-amber-300 align-middle rounded-lg  text-center inline-flex items-center justify-center" disabled>
+                <p>🔒Speed Mode⏩</p><br>
+            </button>
+        </div>
     </div>
 
 </body>
-<div class="visible bg-opacity-70 bg-black absolute left-0 top-0 h-full w-full text-center z-[1000px]" id="overlay">
+
+<div class="visible bg-opacity-100 bg-amber-100 absolute left-0 top-0 h-full w-full text-center" id="overlay">
     
 
-    <div id="tutorialPrompt1" class="visible rounded-xl w-[40%] h-[40%] left-1/2 top-1/2 -mt-[10%] -ml-[20%] absolute bg-white border-4 border-solid border-black p-15 text-center">
-         <h1 class="text-[3em]">🤖 Welcome to free mode!</h1>
+    <div id="tutorialPrompt1" class="visible rounded-xl w-[40%] left-1/2 top-1/2 -mt-[20%] -ml-[20%] absolute bg-white border-4 border-solid border-black p-15 text-center">
+         <h1 class="h-[20%] text-[3vw] border-b-2 border-black border-solid">🤖 Welcome to free mode!</h1>
          
          <p class="text-[2em] mt-2 px-[1em]"> In this mode, you will get to make different ASL characters and have them predicted by an <strong>AI model</strong>. Once you are in a comfortable spot, 
             click on the next button to learn more about the app.</p>
-         <button onclick="tutorialNext()" class="mt-6 w-1/2 right-0 text-[2em] bg-[rgb(76,175,80)] hover:bg-[#247527] text-white font-bold py-2 px-4 rounded-2xl">Next</button>
+         <button onclick="tutorialNext()" class="mt-6 w-1/2 mb-[1vw] right-0 text-[2em] bg-[rgb(76,175,80)] hover:bg-[#247527] text-white font-bold py-2 px-4 rounded-2xl">Next</button>
     </div>
 
-    <div id="tutorialPrompt2" class="invisible rounded-xl w-[40%] h-[40%] left-1/2 ml-6 mt-6 absolute bg-white border-4 border-solid border-black p-15 text-center">
-        <h1 class="text-[3em]">Model input</h1>
+    <div id="tutorialPrompt2" class="invisible rounded-xl border-b-2 w-[40%] left-1/2 ml-6 mt-6 absolute bg-white border-4 border-solid border-black p-15 text-center">
+        <h1 class="h-[20%] text-[3vw] border-b-2 border-black border-solid">➡️Model input</h1>
         <p class="text-[2em] mt-2 px-[1em]" > The area on the left is where a live video will be. This shows you what the computer can see while playing the game. 🤖📸</p>
-        <button onclick="tutorialNext()" class="mt-6 w-1/2 right-0 text-[2em] bg-[rgb(76,175,80)] hover:bg-[#247527] text-white font-bold py-2 px-4 rounded-2xl">Next</button>
+        <button onclick="tutorialNext()" class="mt-6 w-1/2  mb-[1vw] right-0 text-[2em] bg-[rgb(76,175,80)] hover:bg-[#247527] text-white font-bold py-2 px-4 rounded-2xl">Next</button>
     </div>
 
-   <div id="tutorialPrompt3" class=" invisible rounded-xl w-[40%] h-[40%] absolute ml-[5%] mt-[2.5%] bg-white border-4 border-solid border-black p-15 text-center">
-        <h1 class="text-[3em]">Model output</h1>
+   <div id="tutorialPrompt3" class=" invisible rounded-xl border-b-2 w-[40%] absolute ml-[5%] mt-[2.5%] bg-white border-4 border-solid border-black p-15 text-center">
+        <h1 class="h-[20%] text-[3vw] border-b-2 border-black border-solid">Model output➡️</h1>
         <p class="text-[2em] mt-2 px-[1em]"> On the right is where the model prediction will be. This will include <strong>the letter</strong> being predicted and bars showing the models <strong>confidence</strong>. The more 🟩 green the bar, the more ✅confident the prediction.</p>
-        <button onclick="tutorialNext()" class="mt-6 w-1/2 right-0 text-[2em] bg-[rgb(76,175,80)] hover:bg-[#247527] text-white font-bold py-2 px-4 rounded-2xl">Start</button>
+        <button onclick="tutorialNext()" class="mt-6 w-1/2 mb-[1vw] right-0 text-[2em] bg-[rgb(76,175,80)] hover:bg-[#247527] text-white font-bold py-2 px-4 rounded-2xl">Start</button>
     </div>
 
-    <div id="videoHighlight" class="invisible absolute w-1/2 h-1/2 text-center text-[5em] p-[2em] bg-amber-100">Video</div>
-    <div id="statsHighlight" class="invisible absolute w-1/2 h-1/2 left-1/2 bg-amber-100 text-center text-[5em] p-[2em]">Model Output</div>
+    <div id="videoHighlight" class="invisible absolute w-1/2 h-1/2 text-center text-[5em] p-[2em] bg-amber-200 border-4 border-solid">Video</div>
+    <div id="statsHighlight" class="invisible absolute w-1/2 h-1/2 left-1/2 bg-amber-200 p-[1em] border-4 border-solid text-center text-[5em] align-middle ">Model Output</div>
+    
 </div>
+<div id="modelSelectHighlight" class="absolute top-1/2 w-[20%] h-full mt-[2vw] border-solid "></div>
 </html>
 <!--  -->
