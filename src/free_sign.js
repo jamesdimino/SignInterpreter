@@ -93,7 +93,7 @@ function tutorialNext() {
             document.getElementById("promptContainer").style.zIndex = "1";
             document.getElementById("modelSelect").style.zIndex = "1";
             document.getElementById("letterPrompt").innerHTML = "Let's try letters from another model!";
-            document.getElementById("letterPromptCaption").innerHTML = "Click";
+            document.getElementById("letterPromptCaption").innerHTML = "Click the button under 🤖";
             document.getElementById("modelSelect").removeAttribute("disabled");
             document.getElementById("modelSelect").style.opacity = "1";
             // tutorial counter will increase when they click the winter model
