@@ -3,6 +3,8 @@
 
 // Classifier Variable
 let classifier;
+// Model URL
+let imageModelURL = "https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/";
 
 let upper_threshhold = 0.7;
 let lower_threshhold = 0.05;
@@ -13,7 +15,7 @@ let isPaused = true;
 let framesPerChar = 10;
 // Video
 let video;
-let tutorial_counter = 4;
+let tutorial_counter = 1;
 let flippedVideo;
 // To store the classification
 let label = "";
@@ -23,10 +25,9 @@ let label = "";
 let top_character = 'd';
 
 let predictions;
-
 // // set's of letters for each model 
-let springLetters = ['a', 'b', 'c', 'd', 'l', '-'];
-let springConfidence = {
+let summerLetters = ['a', 'b', 'c', 'd', 'l', '-'];
+let summerConfidence = {
     'a': [],
     'b': [],
     'c': [],
@@ -46,18 +47,17 @@ let winterConfidence = {
 };
 
 let letters;
-// let letters = springLetters;
-
+// let letters = summerLetters;
 // this tracks where we are in the letters so the prompts cover them all
 let promptIndex = 0;
 let model;
-let springClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/0_xhWMn4A/'+ 'model.json');
+let summerClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/0_xhWMn4A/'+ 'model.json');
 let winterClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/oalxd3LWt/'+ 'model.json');
 const average = array => array.reduce((a, b) => a + b) / array.length;
 
 // Load the model first
 function preload() {
-    document.getElementById("modelSelect").value = "spring";
+    document.getElementById("modelSelect").value = "summer";
     getModel();
     
 }
@@ -65,11 +65,11 @@ function preload() {
 // Will need to update with the new model links -> Currently all using the same model
 function getModel() {
     model = document.getElementById("modelSelect").value;
-    if (model == "spring") {
-      // spring
-      classifier = springClassifier;
-      letters = springLetters;
-      confidenceArray = springConfidence;
+    if (model == "summer") {
+      // summer
+      classifier = summerClassifier;
+      letters = summerLetters;
+      confidenceArray = summerConfidence;
     } else { 
       // winter
       classifier = winterClassifier;
@@ -104,33 +104,33 @@ function tutorialNext() {
     console.log(tutorial_counter);
     switch(tutorial_counter) {
         case 1:
-            document.getElementById("tutorialPrompt1").style.visibility = "hidden";
+            document.getElementById("tutorialPrompt1").style.visibility = "hidden"; 
             document.getElementById("tutorialPrompt2").style.visibility = "visible";
             document.getElementById("videoHighlight").style.visibility = "visible";
             tutorial_counter += 1;
-            break;
+            break; 
         case 2:
-            document.getElementById("tutorialPrompt2").style.visibility = "hidden";
+            document.getElementById("tutorialPrompt2").style.visibility = "hidden"; 
             document.getElementById("videoHighlight").style.visibility = "hidden";
-            document.getElementById("tutorialPrompt3").style.visibility = "visible";
+            document.getElementById("tutorialPrompt3").style.visibility = "visible"; 
             document.getElementById("statsHighlight").style.visibility = "visible";
             tutorial_counter += 1;
-            break;
+            break; 
         case 3:
-            document.getElementById("tutorialPrompt3").style.visibility = "hidden";
-            document.getElementById("statsHighlight").style.visibility = "hidden";
+            document.getElementById("tutorialPrompt3").style.visibility = "hidden"; 
+            document.getElementById("statsHighlight").style.visibility = "hidden";  
             document.getElementById("overlay").style.visibility = "hidden";
             // console.log("DEBUGGING: SET IS PAUSED TO FALSE HERE WHEN DONE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             isPaused = false;
             tutorial_counter += 1;
             break;
-
+        
         case 4:
             // user has signed all the summer letters and needs to be shown the model select button
             isPaused = true;
             document.getElementById("overlay").style.visibility = "visible";
             document.getElementById("overlay").style.opacity = "85%";
-            // make the background mostly opaque
+            // make the background mostly opaque 
             document.getElementById("modelSelectContainer").style.zIndex = "1";
             document.getElementById("promptContainer").style.zIndex = "1";
             document.getElementById("modelSelect").style.zIndex = "1";
@@ -164,7 +164,7 @@ function tutorialNext() {
 }
 
 function setup() {
-    setupConfidenceArray();
+    
     createCanvas(windowWidth, windowHeight / 2);
     background('rgb(255, 235, 145)')
     koalafont = loadFont("fonts/playfulKoala.otf");
@@ -202,7 +202,7 @@ function draw() {
 
     // Draw the video
     image(flippedVideo, 0, 0);
-
+    
     // draw the live statistics
     statistics();
 }
@@ -249,23 +249,6 @@ function gotResult(error, results) {
 // }
 
 
-// Will need to update with the new model links -> Currently all using the same model
-function getModel() {
-  model = document.getElementById("modelSelect").value;
-  console.log("Model = " + model)
-  if (model == "summer") {
-    // summer
-    classifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/0_xhWMn4A/'+ 'model.json');
-    letters = summerLetters;
-    setupConfidenceArray();
-} else {
-    // winter
-    classifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/oalxd3LWt/'+ 'model.json');
-    letters = winterLetters;
-    setupConfidenceArray();
-  }
-}
-
 
 function tutorial() {
     console.log("Ran the tutorial.");
@@ -283,7 +266,7 @@ function statistics() {
     textAlign(CENTER);
     let top_character_size = 160;
     textSize(top_character_size);
-
+    
     // only draw the character if the bg is not detected
     if (top_character != '-') {
         text(top_character, width * 0.75, height * 0.33 + (top_character_size * 0.25));
@@ -299,11 +282,8 @@ function statistics() {
     }
 
     for (let i = 0; i < letters.length; i++) {
-        console.log(predictions)
-        console.log(letters)
         // draw the bar and letter if not background
         let entry = predictions.find(element => element.label === letters[i]);
-
 
         // set some vars for easy use later
         maxBarHeight = 100;
@@ -311,8 +291,7 @@ function statistics() {
         barGap = 50;
         startingX = windowWidth * 0.625 + ((barGap + barWidth) * i);
         startingY = windowHeight * 0.45;
-        console.log("aaa")
-        console.log(entry);
+
         if (entry.label != '-') {
             // Interpolate from red to green using confidence
             fill(lerpColor(color(255,0,0), color(0,255,0), entry.confidence));
@@ -329,10 +308,8 @@ function statistics() {
             textAlign(CENTER);
             text(entry.label,startingX + barWidth / 2, startingY + 30);
         }
-        console.log("bbb")
+        
         // keep track of the past framesPerChar confidences
-        console.log(letters[i])
-        console.log(confidenceArray);
         confidenceArray[letters[i]].push(entry.confidence)
         if (confidenceArray[letters[i]].length > framesPerChar) {
             confidenceArray[letters[i]].shift()
@@ -341,7 +318,6 @@ function statistics() {
     // progress does not update for background, should always be zero
     if (top_character != '-') {
         // is the top character average above or below the threshold?
-        console.log(top_character)
         let top_avg = average(confidenceArray[top_character]);
         if (top_avg > upper_threshhold) {
             // model is confident for the top letter, increase progress
@@ -365,8 +341,6 @@ function statistics() {
         // find char with highest avg ( excluding the background )
         for (letter in confidenceArray) {
             // && letter != '-'
-            console.log()
-            console.log(letter)
             if (average(confidenceArray[letter]) > highest_avg ) {
                 highest_avg = average(confidenceArray[letter]);
                 top_character = letter;
@@ -382,9 +356,7 @@ function switchModel() {
     if (tutorial_counter == 5 && selector.value == "winter") {
         // indicate that the user can proceed
         // disable the button so they can't change it during this phase
-
         document.getElementById("modelSelect").disabled = true;
-
         document.getElementById("modelSelect").style.opacity = "0.5";
         // unpause the game
         isPaused = false;
@@ -396,7 +368,6 @@ function switchModel() {
 function confirmLetter() {
     // confirm the letter
     console.log(`confirming letter ${top_character}`);
-
     /////////////////////////////////////////////////////////////////////////////////////////
     if (top_character === letters[promptIndex]) {
         // show the correct icon
@@ -417,13 +388,5 @@ function confirmLetter() {
             
         }
     }
-
     progress = 0;
-}
-
-function setupConfidenceArray() {
-    confidenceArray = {}
-    for (let i = 0; i < letters.length; ++i) {
-        confidenceArray[letters[i]] = [];
-    }
 }
