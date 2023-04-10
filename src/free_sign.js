@@ -1,19 +1,15 @@
+// Due to the draw function driving the program cycles, it is necessary to use
+// many global variables so 
+
 // Classifier Variable
 let classifier;
 // Model URL
 let imageModelURL = "https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/";
 
-let upper_threshhold = 0.7
-let lower_threshhold = 0.05
-let confidenceArray = {
-    'a': [] ,
-    'b': [], 
-    'c': [], 
-    'd': [], 
-    'e': [], 
-    'f': [],
-    '-': []
-}
+let upper_threshhold = 0.7;
+let lower_threshhold = 0.05;
+let confidenceArray = {};
+
 let progress = 0;
 let isPaused = true;
 let framesPerChar = 10;
@@ -23,25 +19,71 @@ let tutorial_counter = 1;
 let flippedVideo;
 // To store the classification
 let label = "";
-// I'm just arbitrarilly setting the first character to 'a'
-let top_character = 'a';
+// This only works because the two models share a letter. If this changes,
+// then each time a model is chosen there must be a new top letter chosen
+// from their set of letters
+let top_character = 'd';
 
 let predictions;
 // // set's of letters for each model 
 let springLetters = ['a', 'b', 'c', 'd', 'l', '-'];
+let springConfidence = {
+    'a': [],
+    'b': [],
+    'c': [],
+    'd': [],
+    'l': [],
+    '-': []
+};
+
 let winterLetters = ['d', 'e', 'f', 'g', 'i', '-'];
-const letters = ['a', 'b', 'c', 'd', 'e', 'f','-'];
+let winterConfidence = {
+    'd': [],
+    'e': [],
+    'f': [],
+    'g': [],
+    'i': [],
+    '-': []
+};
+
+let letters;
 // let letters = springLetters;
 // this tracks where we are in the letters so the prompts cover them all
 let promptIndex = 0;
 let model;
-
+let springClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/0_xhWMn4A/'+ 'model.json');
+let winterClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/oalxd3LWt/'+ 'model.json');
 const average = array => array.reduce((a, b) => a + b) / array.length;
 
 // Load the model first
 function preload() {
+    document.getElementById("modelSelect").value = "spring";
     getModel();
+    
 }
+
+// Will need to update with the new model links -> Currently all using the same model
+function getModel() {
+    model = document.getElementById("modelSelect").value;
+    if (model == "spring") {
+      // spring
+      classifier = springClassifier;
+      letters = springLetters;
+      confidenceArray = springConfidence;
+    } else { 
+      // winter
+      classifier = winterClassifier;
+      letters = winterLetters;
+      confidenceArray = winterConfidence;
+    }
+
+    for (i in confidenceArray) {
+        confidenceArray[i] = [];
+    }
+
+    predictions = null;
+    // reset any predictions
+  }
 
 function pause_play() {
     textSize(120);
@@ -94,10 +136,30 @@ function tutorialNext() {
             document.getElementById("modelSelect").style.zIndex = "1";
             document.getElementById("letterPrompt").innerHTML = "Let's try letters from another model!";
             document.getElementById("letterPromptCaption").innerHTML = "Click the button under 🤖";
-            document.getElementById("modelSelect").removeAttribute("disabled");
+            document.getElementById("modelSelect").disabled = false;
             document.getElementById("modelSelect").style.opacity = "1";
+            tutorial_counter += 1;
             // tutorial counter will increase when they click the winter model
             break;
+        case 5:
+            document.getElementById("overlay").style.visibility = "hidden";    
+            document.getElementById("letterPromptCaption").innerHTML = "Hint: Try moving your hand around the screen";
+            document.getElementById("modelSelect").disabled = true;
+            document.getElementById("modelSelect").style.opacity = "0.5";
+            for (i in confidenceArray) {
+                confidenceArray[i] = [];
+            }
+            top_character = 'd';
+            predictions = null;
+            isPaused = false;
+            tutorial_counter += 1;
+            break;
+        case 6:
+            document.getElementById("letterPrompt").innerHTML = "Congratulations, you finished free mode!";  
+            document.getElementById("letterPromptCaption").innerHTML = "When you're ready, try out speed mode and test your ASL skills";
+            document.getElementById("speedBtn").disabled = false;
+            document.getElementById("speedBtn").style.opacity = "1";
+            document.getElementById("speedBtn").innerHTML = "🔓SpeedMode⏩";
     }
 }
 
@@ -174,29 +236,19 @@ function gotResult(error, results) {
     // }
 }
 
-function highestOccurence(arr){
-    return arr.sort((a, b) =>
-          arr.filter(x => x === a).length
-        - arr.filter(x => x === b).length
-    ).pop();
-}
+// function highestOccurence(arr){
+//     return arr.sort((a, b) =>
+//           arr.filter(x => x === a).length
+//         - arr.filter(x => x === b).length
+//     ).pop();
+// }
 
-function deleteChar() {
-  top_character = top_character.slice(0, -1);
-  progress = 0;
-}
+// function deleteChar() {
+//   top_character = top_character.slice(0, -1);
+//   progress = 0;
+// }
 
-// Will need to update with the new model links -> Currently all using the same model
-function getModel() {
-  model = document.getElementById("modelSelect").value;
-  if (model == 1) {
-    // spring
-    classifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'+ 'model.json');
-} else { 
-    // winter
-    classifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/pJVCDtMZQ/'+ 'model.json');
-  }
-}
+
 
 function tutorial() {
     console.log("Ran the tutorial.");
@@ -301,46 +353,40 @@ function switchModel() {
     // function activates when the user selects a model
     let selector = document.getElementById("modelSelect")
     // Am I waiting for them to click winter?
-    if (tutorial_counter == 4 && selector.value == "winter") {
+    if (tutorial_counter == 5 && selector.value == "winter") {
         // indicate that the user can proceed
-        tutorial_counter += 1;
         // disable the button so they can't change it during this phase
-        document.getElementById("modelSelect").addAttribute("disabled");
+        document.getElementById("modelSelect").disabled = true;
         document.getElementById("modelSelect").style.opacity = "0.5";
         // unpause the game
         isPaused = false;
         // update the classifier
         getModel();
-
-
+        tutorialNext();
     }
 }
 function confirmLetter() {
     // confirm the letter
     console.log(`confirming letter ${top_character}`);
-    if (document.getElementById("modelSelect").value == "spring") {
-        if (top_character === springLetters[promptIndex]) {
-            // show the correct icon
-            
-            promptIndex += 1;
-            // -1 since the last character is the background
-            // entry needs to be there since it's classifiable and it used in the
-            // statistics function
-            if (promptIndex >= springLetters.length - 1) {
-                // all out of spring letters, tell user to switch to winter
-                tutorialNext();
-            } else {
-                document.getElementById("letterPrompt").innerHTML = `Can you sign a <strong>'${springLetters[promptIndex]}'</strong>?<br>`
-                
-            }
-        }
-    } else {
-        // user swapped to the
-        // if (top_character === winterLetters[promptIndex]) {
-        //     promptIndex += 1;
-        // }
+    /////////////////////////////////////////////////////////////////////////////////////////
+    if (top_character === letters[promptIndex]) {
+        // show the correct icon
         
+        promptIndex += 1;
+        // -1 since the last character is the background
+        // entry needs to be there since it's classifiable and it used in the
+        // statistics function
+        if (promptIndex >= letters.length - 1) {
+            
+
+            // special case, we have reached the end of the prompts
+            tutorialNext();
+            promptIndex = 0;
+        
+        } else {
+            document.getElementById("letterPrompt").innerHTML = `Can you sign a <strong>'${letters[promptIndex]}'</strong>?<br>`
+            
+        }
     }
-    
     progress = 0;
 }
