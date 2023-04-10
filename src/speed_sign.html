@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- <link rel="stylesheet" href="index.css"> -->
+    <link rel="stylesheet" href="output.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speed Sign</title>
-	<link rel="stylesheet" href="index.css">
 
     <script src="https://cdn.jsdelivr.net/npm/p5@latest/lib/p5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@latest/lib/addons/p5.dom.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ml5@latest/dist/ml5.min.js"></script>
     <script src="speed_sign.js"></script>
 </head>
-<body>
-	<div class="instructions">
-        <p>How to play...</p>
-		<button onclick="location.href='home.html'">
-			Main Menu
-		</button>
+<body class="bg-[rgb(255,244,197)] border-2 border-amber-400">
+
+    <div class="absolute top-1/2 flex mt-[2vw] w-full">
+        <div id="modelSelectContainer" style="z-index: 1">
+            <h1 class="text-[10vw]">🤖</h1>
+            <select onchange="checkModel()" id="modelSelect" class="p-[1vw] hover:bg-amber-300 bg-amber-200 h-[20%] text-[2vw] text-center justify-center ml-[2vw] rounded-3xl mb-[10%]">
+                <option value="" disabled selected>Select A Model</option>
+                <option value="summer">Summer☀️</option>
+                <option value="winter">Winter❄️</option>
+            </select>
+        </div>
+        <div id="promptContainer" class="border-[10px] border-solid border-white text-[5vw] bg-amber-50 mt-[3vw] center  text-center align-middle mr-[10vw] ml-[1vw] w-full mb-[3vw] rounded-3xl justify-items-center">
+            <p id="wordPrompt" class="ml-[2vw]"></p>
+            <p id="extraPrompt" class="text-[2vw] ml-[2vw]"></p>
+            <!-- <img class=" h-1/2 w-1/2 bg-[url(./static/asl.jpg)]"> -->
+        </div>
     </div>
+
 </body>
+
+<div id="modelSelectHighlight" class="absolute top-1/2 w-[20%] h-full mt-[2vw] border-solid "></div>
 </html>
+<!--  -->
