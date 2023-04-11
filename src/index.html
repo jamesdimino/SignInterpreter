@@ -33,63 +33,9 @@
      * Add new users to locally stored JSON object
     **/
     function addUser() {
-        let userData = localStorage.getItem('userData');
         let firstName = document.getElementById('fname').value;
         let grade = document.getElementById('grade').value;
-        var date = new Date();
-        var formattedDate = date.getDate() + "/"
-            + (date.getMonth() + 1)  + "/"
-            + date.getFullYear() + " - "
-            + date.getHours() + ":"
-            + date.getMinutes() + ":"
-            + date.getSeconds();
-
-        if (userData) {
-            userData = JSON.parse(userData);
-        } else {
-            userData = {users: []};
-        }
-        userData.users.push({
-            firstName: firstName,
-            grade: grade,
-            date: date
-        });
-        localStorage.setItem('userData', JSON.stringify(userData));
-    }
-
-    /**
-     * Exports all users currently in localstorage
-     * Download file in csv format
-     *
-     * This function should only be ran in console
-    **/
-    function exportUsers() {
-        let userData = localStorage.getItem('userData');
-        if (userData) {
-            userData = JSON.parse(userData).users;
-            let csvRows = [];
-            const headers = ['ID', 'Name', 'Grade', 'Date/Time'];
-            csvRows.push(headers.join(','));
-            userData.forEach(function (user) {
-                let newRow = [
-                    csvRows.length,
-                    user.firstName,
-                    user.grade,
-                    user.date
-                ];
-
-                csvRows.push(newRow.join(','))
-            })
-            csvRows = csvRows.join('\n')
-            const blob = new Blob([csvRows], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.setAttribute('href', url)
-            a.setAttribute('download', 'users.csv');
-            a.click()
-            console.log('Users have been exported!')
-        } else {
-            console.log("No user data to export!");
-        }
+        localStorage.setItem('fname', firstName);
+        localStorage.setItem('grade', grade)
     }
 </script>

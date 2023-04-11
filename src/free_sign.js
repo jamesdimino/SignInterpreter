@@ -1,5 +1,5 @@
 // Due to the draw function driving the program cycles, it is necessary to use
-// many global variables so 
+// many global variables so
 
 // Classifier Variable
 let classifier;
@@ -25,7 +25,7 @@ let label = "";
 let top_character = 'd';
 
 let predictions;
-// // set's of letters for each model 
+// // set's of letters for each model
 let summerLetters = ['a', 'b', 'c', 'd', 'l', '-'];
 let summerConfidence = {
     'a': [],
@@ -59,7 +59,7 @@ const average = array => array.reduce((a, b) => a + b) / array.length;
 function preload() {
     document.getElementById("modelSelect").value = "summer";
     getModel();
-    
+
 }
 
 // Will need to update with the new model links -> Currently all using the same model
@@ -70,7 +70,7 @@ function getModel() {
       classifier = summerClassifier;
       letters = summerLetters;
       confidenceArray = summerConfidence;
-    } else { 
+    } else {
       // winter
       classifier = winterClassifier;
       letters = winterLetters;
@@ -104,33 +104,33 @@ function tutorialNext() {
     console.log(tutorial_counter);
     switch(tutorial_counter) {
         case 1:
-            document.getElementById("tutorialPrompt1").style.visibility = "hidden"; 
+            document.getElementById("tutorialPrompt1").style.visibility = "hidden";
             document.getElementById("tutorialPrompt2").style.visibility = "visible";
             document.getElementById("videoHighlight").style.visibility = "visible";
             tutorial_counter += 1;
-            break; 
+            break;
         case 2:
-            document.getElementById("tutorialPrompt2").style.visibility = "hidden"; 
+            document.getElementById("tutorialPrompt2").style.visibility = "hidden";
             document.getElementById("videoHighlight").style.visibility = "hidden";
-            document.getElementById("tutorialPrompt3").style.visibility = "visible"; 
+            document.getElementById("tutorialPrompt3").style.visibility = "visible";
             document.getElementById("statsHighlight").style.visibility = "visible";
             tutorial_counter += 1;
-            break; 
+            break;
         case 3:
-            document.getElementById("tutorialPrompt3").style.visibility = "hidden"; 
-            document.getElementById("statsHighlight").style.visibility = "hidden";  
+            document.getElementById("tutorialPrompt3").style.visibility = "hidden";
+            document.getElementById("statsHighlight").style.visibility = "hidden";
             document.getElementById("overlay").style.visibility = "hidden";
             // console.log("DEBUGGING: SET IS PAUSED TO FALSE HERE WHEN DONE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             isPaused = false;
             tutorial_counter += 1;
             break;
-        
+
         case 4:
             // user has signed all the summer letters and needs to be shown the model select button
             isPaused = true;
             document.getElementById("overlay").style.visibility = "visible";
             document.getElementById("overlay").style.opacity = "85%";
-            // make the background mostly opaque 
+            // make the background mostly opaque
             document.getElementById("modelSelectContainer").style.zIndex = "1";
             document.getElementById("promptContainer").style.zIndex = "1";
             document.getElementById("modelSelect").style.zIndex = "1";
@@ -142,7 +142,7 @@ function tutorialNext() {
             // tutorial counter will increase when they click the winter model
             break;
         case 5:
-            document.getElementById("overlay").style.visibility = "hidden";    
+            document.getElementById("overlay").style.visibility = "hidden";
             document.getElementById("letterPromptCaption").innerHTML = "Hint: Try moving your hand around the screen";
             document.getElementById("modelSelect").disabled = true;
             document.getElementById("modelSelect").style.opacity = "0.5";
@@ -155,7 +155,7 @@ function tutorialNext() {
             tutorial_counter += 1;
             break;
         case 6:
-            document.getElementById("letterPrompt").innerHTML = "Congratulations, you finished free mode!";  
+            document.getElementById("letterPrompt").innerHTML = "Congratulations, you finished free mode!";
             document.getElementById("letterPromptCaption").innerHTML = "When you're ready, try out speed mode and test your ASL skills";
             document.getElementById("speedBtn").disabled = false;
             document.getElementById("speedBtn").style.opacity = "1";
@@ -165,7 +165,7 @@ function tutorialNext() {
 }
 
 function setup() {
-    
+
     createCanvas(windowWidth, windowHeight / 2);
     background('rgb(255, 235, 145)')
     koalafont = loadFont("fonts/playfulKoala.otf");
@@ -203,7 +203,7 @@ function draw() {
 
     // Draw the video
     image(flippedVideo, 0, 0);
-    
+
     // draw the live statistics
     statistics();
 }
@@ -267,7 +267,7 @@ function statistics() {
     textAlign(CENTER);
     let top_character_size = 160;
     textSize(top_character_size);
-    
+
     // only draw the character if the bg is not detected
     if (top_character != '-') {
         text(top_character, width * 0.75, height * 0.33 + (top_character_size * 0.25));
@@ -309,7 +309,7 @@ function statistics() {
             textAlign(CENTER);
             text(entry.label,startingX + barWidth / 2, startingY + 30);
         }
-        
+
         // keep track of the past framesPerChar confidences
         confidenceArray[letters[i]].push(entry.confidence)
         if (confidenceArray[letters[i]].length > framesPerChar) {
@@ -369,28 +369,28 @@ function switchModel() {
 }
 function confirmLetter() {
     // confirm the letter
-    console.log(`confirming letter ${top_character}`);
+    //console.log(`confirming letter ${top_character}`);
     /////////////////////////////////////////////////////////////////////////////////////////
     if (top_character === letters[promptIndex]) {
         // show the correct icon
-        
+
         promptIndex += 1;
         // -1 since the last character is the background
         // entry needs to be there since it's classifiable and it used in the
         // statistics function
         if (promptIndex >= letters.length - 1) {
-            
-            // 
-            
+
+            //
+
             tutorialNext();
             // no more prompts to give
-            if (tutorial_counter > 6) { 
+            if (tutorial_counter > 6) {
                 promptIndex = -1;
             } else {
                 promptIndex = 0;
             }
-            
-        
+
+
         } else {
             document.getElementById("letterPrompt").innerHTML = `Can you sign a <strong>'${letters[promptIndex]}'</strong>?<br>`
         }

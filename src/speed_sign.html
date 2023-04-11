@@ -16,15 +16,16 @@
 <body class="bg-[rgb(255,244,197)] border-2 border-amber-400">
 
     <div class="absolute top-1/2 flex mt-[2vw] w-full">
-        <div id="modelSelectContainer" style="z-index: 1">
-            <h1 class="text-[10vw]">🤖</h1>
-            <select onchange="checkModel()" id="modelSelect" class="p-[1vw] hover:bg-amber-300 bg-amber-200 h-[20%] text-[2vw] text-center justify-center ml-[2vw] rounded-3xl mb-[10%]">
+        <div id="modelSelectContainer" style="z-index: 1" class="text-center ml-[1vw]">
+            <h1 id="robotImg" class="text-[10vw]">🤖</h1>
+            <select onchange="checkModel()" id="modelSelect" class="p-[1vw] hover:bg-amber-300 bg-amber-200 h-[20%] text-[2vw] text-center justify-center rounded-3xl mb-[10%]">
                 <option value="" disabled selected>Select A Model</option>
                 <option value="summer">Summer☀️</option>
                 <option value="winter">Winter❄️</option>
             </select>
         </div>
         <div id="promptContainer" class="border-[10px] border-solid border-white text-[5vw] bg-amber-50 mt-[3vw] center  text-center align-middle mr-[10vw] ml-[1vw] w-full mb-[3vw] rounded-3xl justify-items-center">
+            <p id="roundTimer" class="text-[2vw]"></p>
             <p id="wordPrompt" class="ml-[2vw]"></p>
             <p id="extraPrompt" class="text-[2vw] ml-[2vw]"></p>
             <!-- <img class=" h-1/2 w-1/2 bg-[url(./static/asl.jpg)]"> -->
@@ -32,6 +33,24 @@
     </div>
 
 </body>
+
+
+<div class="invisible bg-opacity-100 bg-amber-100 absolute left-0 top-0 h-full w-full text-center" id="overlay">
+
+    <div id="scorePromptBox" class="invisible rounded-xl w-[40%] left-1/2 top-1/2 -mt-[20%] -ml-[20%] absolute bg-white border-4 border-solid border-black p-15 text-center">
+         <h1 class="h-[20%] text-[3vw] border-b-2 border-black border-solid">🤖 Nice Job!</h1>
+
+         <p id="scorePrompt" class="text-[2em] mt-2 px-[1em]"></p>
+         <button onclick="endGame()" class="mt-6 w-1/2 mb-[1vw] right-0 text-[2em] bg-[rgb(76,175,80)] hover:bg-[#247527] text-white font-bold py-2 px-4 rounded-2xl">Exit Game</button>
+    </div>
+
+    <div id="startPromptBox" class="invisible rounded-xl w-[40%] left-1/2 top-1/2 -mt-[20%] -ml-[20%] absolute bg-white border-4 border-solid border-black p-15 text-center">
+        <h1 class="h-[20%] text-[3vw] border-b-2 border-black border-solid">🤖 Get Ready!</h1>
+
+        <p id="startPrompt" class="text-[2em] mt-2 px-[1em]"></p>
+   </div>
+
+</div>
 
 <div id="modelSelectHighlight" class="absolute top-1/2 w-[20%] h-full mt-[2vw] border-solid "></div>
 </html>
