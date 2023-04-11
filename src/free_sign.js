@@ -51,8 +51,8 @@ let letters;
 // this tracks where we are in the letters so the prompts cover them all
 let promptIndex = 0;
 let model;
-let summerClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/0_xhWMn4A/'+ 'model.json');
-let winterClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/oalxd3LWt/'+ 'model.json');
+let summerClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/hAIcdenff/'+ 'model.json');
+let winterClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/PhZd8vOfY/'+ 'model.json');
 const average = array => array.reduce((a, b) => a + b) / array.length;
 
 // Load the model first

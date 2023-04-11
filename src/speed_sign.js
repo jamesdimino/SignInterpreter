@@ -45,8 +45,8 @@ let model;
 let correctModel = "";
 let isModelCorrect = false;
 
-let summerClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/0_xhWMn4A/'+ 'model.json');
-let winterClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/oalxd3LWt/'+ 'model.json');
+let summerClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/hAIcdenff/'+ 'model.json');
+let winterClassifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/PhZd8vOfY/'+ 'model.json');
 
 let score = 0;
 let incorrectModelAttempts = 0;
