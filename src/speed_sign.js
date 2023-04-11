@@ -358,7 +358,7 @@ function updateStartTime() {
 function endGame() {
 	addUser();
 	// Uncomment when you want to export users. Or run in console
-	exportUsers();
+	//exportUsers();
 	window.location = 'index.html';
 }
 
