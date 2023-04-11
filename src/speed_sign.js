@@ -270,7 +270,7 @@ function confirmLetter() {
 }
 
 function setupConfidenceArray() {
-    confidenceArray = {}
+    confidenceArray = {};
     for (let i = 0; i < letters.length; ++i) {
         confidenceArray[letters[i]] = [];
     }

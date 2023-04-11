@@ -160,6 +160,7 @@ function tutorialNext() {
             document.getElementById("speedBtn").disabled = false;
             document.getElementById("speedBtn").style.opacity = "1";
             document.getElementById("speedBtn").innerHTML = "🔓SpeedMode⏩";
+            tutorial_counter += 1;
     }
 }
 
@@ -332,7 +333,7 @@ function statistics() {
     }
 
     // has the progress reaches 100 (done) or 0 (choose a new letter)
-    if (progress >= 100) {
+    if (progress >= 100 && tutorial_counter < 7) {
         confirmLetter();
     } else if (progress <= 0) {
         // if it is negative, set it to zero
@@ -358,6 +359,7 @@ function switchModel() {
         // disable the button so they can't change it during this phase
         document.getElementById("modelSelect").disabled = true;
         document.getElementById("modelSelect").style.opacity = "0.5";
+        document.getElementById("letterPrompt").innerHTML = `Can you sign a <strong>'d'</strong>?<br>`
         // unpause the game
         isPaused = false;
         // update the classifier
@@ -378,14 +380,19 @@ function confirmLetter() {
         // statistics function
         if (promptIndex >= letters.length - 1) {
             
-
-            // special case, we have reached the end of the prompts
+            // 
+            
             tutorialNext();
-            promptIndex = 0;
+            // no more prompts to give
+            if (tutorial_counter > 6) { 
+                promptIndex = -1;
+            } else {
+                promptIndex = 0;
+            }
+            
         
         } else {
             document.getElementById("letterPrompt").innerHTML = `Can you sign a <strong>'${letters[promptIndex]}'</strong>?<br>`
-            
         }
     }
     progress = 0;
